@@ -22,7 +22,7 @@ ArrayList<Float> arr;
 //int arrIndex;
 
 //decay is still buggy
-ArrayList<Integer> decayIndex;
+HashMap<Integer, Integer> decayIndex;
 
 float minW = 0.1;
 float maxW = 0.4;
@@ -32,8 +32,8 @@ float minH = 0.0;
 float maxH = 0.3;
 int changeH = 0;
 
-float freqRate = 0.02;//how much it opens up, from 0.070-0.084
-float levelRate = 100;//how quickly it grows MIGHT BE SMALLER
+float freqRate = 0.03;//how much it opens up, from 0.070-0.084
+float levelRate = 500;//how quickly it grows 
 
 int maxNoOfTrees = 50;
 
@@ -60,16 +60,15 @@ void setup () {
   fft = new FFT (input.bufferSize (), 
     input.sampleRate ());
     
-  //intial tree things
+  //intial tree settings
   growthPlace = maxW * width;
   targetHeight = maxH * height;
-  currentAngle = 0.0;
+  currentAngle = 0.1;
   currentHeight = 0.0;
   arr = new ArrayList<Float>(); 
-  //arrIndex = 0;
   
   //decay still buggy
-  decayIndex = new ArrayList<Integer>(); 
+  decayIndex = new HashMap<Integer, Integer>(); 
 }
 
 void draw () {
@@ -95,8 +94,9 @@ void draw () {
   //Code to get curretAngle
   float h = 0;    
   
-  
+  //Draw fft group lines
   float[] group = getGroup (16);
+  
   float specStep = width / group.length;
   for (int i=0; i < group.length; i++) {
     float map = map (group[i], 0, maxSpec, 0, height);
@@ -106,6 +106,7 @@ void draw () {
     
     fill(0, 102, 153);
   }
+  
   float map = map (group[groupNr], 0, maxSpec, 0, height);
   h = height - map;
   
@@ -114,9 +115,10 @@ void draw () {
     arr.add(currentAngle);
     arr.add(currentHeight);
     arr.add(growthPlace);
+    decayIndex.put(arr.size()/3 - 1, 255);
      
     //reset tree
-    currentAngle = 0;  
+    currentAngle = 0.1;  
     currentHeight = 0;  
     
     //select a new place for the new tree in random
@@ -131,15 +133,18 @@ void draw () {
   
   currentAngle += map * freqRate;
   currentHeight += input.mix.level() * levelRate;
+  
   standingTree(currentAngle, currentHeight, growthPlace, 255);
   
+  drawOtherTrees();
+  
   //Decaying still buggy
-  int noOfDecayingTrees = arr.size() - maxNoOfTrees * 3;  
+  /*int noOfDecayingTrees = arr.size() - maxNoOfTrees * 3;  //Positive: no decaying trees, 0: maximum no of trees reached, Neagtive: there are trees that need to die
   
   boolean removeOldTree = false;
   for (int i = arr.size()-3; i >= 0; i -= 3) {
     //println(i);
-    if (noOfDecayingTrees > 0 && i < noOfDecayingTrees) {
+    if (noOfDecayingTrees > 0 && noOfDecayingTrees > i) {// there are no decaying trees and 
       if(decayIndex.size() <= i/3 ) {
         decayIndex.add(i/3, 255 - decayRate); 
         //println(decayIndex.get(i/3));
@@ -167,7 +172,7 @@ void draw () {
      decayIndex.remove(0);
      //println("DecayIndex size: " + decayIndex.size());
      
-  }
+  }*/
   }
 }
 
