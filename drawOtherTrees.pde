@@ -1,16 +1,30 @@
 void drawOtherTrees () {
   
   
-  
-  int trees2Decay = arr.size()/3 - maxNoOfTrees;
-  for (int i = 0; i < arr.size(); i += 3) { //if size is 30, i runs from 0 to 27 (0, 3, ..., 24, 27)
-    //int decayment = decayIndex.get(i/3);
+  for (int i = otherTreesCurrentAngle.length - 1; i >= 0; i--) {
     
-    if (i/3 < trees2Decay) {
-      int decayment = max(0, decayIndex.get(i/3) - decayRate);
-      decayIndex.put(i/3, decayment);
-      
+    if (i >= maxNoOfTrees && otherTreesCurrentHeight[i] > 0.01) {
+       int cRand = round(random(0.5,3.4));
+       
+       switch (cRand) {
+          case 1:
+          otherTreesColoursRed[i] = max(0, otherTreesColoursRed[i] - decayRate);
+        //  println(cRand);
+          
+          case 2:
+          otherTreesColoursGreen[i] = max(0, otherTreesColoursGreen[i] - decayRate);
+        //  println(cRand);
+          
+          case 3:
+          otherTreesColoursBlue[i] = max(0, otherTreesColoursBlue[i] - decayRate);
+         // println(cRand);
+       }
     }
-    standingTree(arr.get(i), arr.get(i + 1), arr.get(i + 2), decayIndex.get(i/3));
+    
+    if (otherTreesColoursRed[i] + otherTreesColoursGreen[i] + otherTreesColoursBlue[i] > 0 && otherTreesCurrentHeight[i] > 0.01) {
+      standingTree(otherTreesCurrentAngle[i], otherTreesCurrentHeight[i], otherTreesGrowthPlace[i], otherTreesColoursRed[i], otherTreesColoursGreen[i], otherTreesColoursBlue[i]);
+    }
+    
   }
+  
 }
