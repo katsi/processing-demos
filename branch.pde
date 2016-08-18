@@ -1,3 +1,10 @@
+/**
+*Credits: Recursive Tree by Daniel Shiffman. 
+*
+*https://processing.org/examples/tree.html
+*/
+
+
 void branch(float h) {
   // Each branch will be 2/3rds the size of the previous one
   h *= 0.66;

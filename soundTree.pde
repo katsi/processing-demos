@@ -1,4 +1,11 @@
 
+/**
+*Credits: The recursive trees are by Daniel Shiffman. 
+*
+*https://processing.org/examples/tree.html
+*/
+
+
 import ddf.minim.*;
 import ddf.minim.analysis.*;
 
@@ -44,22 +51,16 @@ int groupNr = 1;//FFT CHANNEL, choose from 0-15
 
 boolean endThis = false;
 
-boolean flag;
 
 void setup () {
-  size(768, 512);
-  //fullScreen();
+  size(768, 512); //use this for getting an exact size for your window
+  //fullScreen(); //use this to show the program in fullscreen
 
-  flag = false;
-
-  //pg = createGraphics(width, height, P2D);
-
-  // Audiotool-Box und Mikrofoneingang erstellen 
-  // und einrichten. Die '256' bestimmen dabei die 
-  // spÃ¤tere AuflÃ¶sung des Spektrums.
+  //get line in
   minim = new Minim (this);
   input = minim.getLineIn (Minim.STEREO, 256);
-  // FFT-Instanz fÃ¼r die Spektrumsanalyse
+  
+  //FFT analysis
   fft = new FFT (input.bufferSize (), 
     input.sampleRate ());
 
@@ -79,10 +80,6 @@ void setup () {
 
 void draw () {
 
-  if (!flag) {
-    surface.setLocation(0, 0);
-    flag = true;
-  }
   
   if (endThis) {
     noStroke();
@@ -93,21 +90,14 @@ void draw () {
 
     background (0);
 
-    //soundlevel
-    /*text("level: "+input.mix.level()*20, 120, 10);
-     fill(0, 102, 153);*/
-
-    //frameRate(25);
-
-    // Let's pick an angle 0 to 90 degrees based on the mouse position
-    //float currentAngle = (mouseX / (float) width) * 90f;
-
-    //Code to get curretAngle
+    
     float h = 0;    
 
     //Draw fft group lines
     float[] group = getGroup (16);
 
+    
+    //create a visualisation for the different channels
     /*float specStep = width / group.length;
      for (int i=0; i < group.length; i++) {
      float map = map (group[i], 0, maxSpec, 0, height);
